@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-indigo-50 font-sans tracking-wide antialiased overflow-x-hidden;
+  }
+}
+
+@layer components {
+
+  /* Class for standard glass effect on cards */
+  .glass-card {
+    @apply bg-surface/60 backdrop-blur-md border border-indigo-500/10 rounded-2xl shadow-xl transition-all duration-300;
+  }
+
+  .glass-card:hover {
+    @apply border-indigo-500/30 shadow-indigo-500/10 shadow-2xl;
+  }
+
+  /* Class for buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#034FE5] hover:bg-[#023cae] text-white font-medium shadow-lg shadow-[#034FE5]/40 hover:shadow-xl hover:shadow-[#034FE5]/60 transition-all duration-300;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-full bg-surface/80 hover:bg-surface border border-indigo-500/20 hover:border-indigo-500/40 text-indigo-100 font-medium backdrop-blur-sm transition-all duration-300;
+  }
+
+  /* Text gradients */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-200 via-indigo-400 to-accent;
+  }
+
+  .text-gradient-primary {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-accent;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0f1c;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e1b4b;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #312e81;
+}
