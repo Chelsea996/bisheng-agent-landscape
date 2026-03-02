@@ -36,7 +36,7 @@ const scenarioCategories = [
 ];
 
 export default function Home() {
-    const navigate = useRouter();
+    const router = useRouter();
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
     // Filter states
@@ -135,7 +135,7 @@ export default function Home() {
                             <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
                         </button>
 
-                        <button className="btn-secondary" onClick={() => navigate('/landscape')}>
+                        <button className="btn-secondary" onClick={() => router.push('/landscape')}>
                             View Landscape Map
                         </button>
                     </motion.div>
@@ -180,7 +180,7 @@ export default function Home() {
                                     onHoverEnd={() => setHoveredIndex(null)}
                                     onClick={() => {
                                         if (isSelectable) {
-                                            navigate(`/industry/${ind.id}`);
+                                            router.push(`/industry/${ind.id}`);
                                         }
                                     }}
                                 >
