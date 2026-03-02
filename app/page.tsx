@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { industriesData } from '../data/industries';
+import { industriesEn, industriesZh } from '../data/industries';
 import ScenarioModal from '../components/ScenarioModal';
 import {
     Building, Activity, Cpu, Landmark, ShoppingCart,
@@ -28,16 +28,18 @@ const iconMap: Record<string, React.ReactNode> = {
     'General Enterprise': <Globe size={20} />
 };
 
-const scenarioCategories = [
-    { id: 'Review', label: 'Content Moderation' },
-    { id: 'Q&A', label: 'Q&A' },
-    { id: 'Report', label: 'Report Generation' },
-    { id: 'Decision', label: 'Business Decision' }
-];
+import { useLang } from '../components/Providers';
+import { t, categoriesEn, categoriesZh, displayIndustriesEn, displayIndustriesZh } from '../data/translations';
 
 export default function Home() {
     const router = useRouter();
+    const { lang } = useLang();
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+    const txt = t[lang];
+    const scenarioCategories = lang === 'en' ? categoriesEn : categoriesZh;
+    const displayIndustries = lang === 'en' ? displayIndustriesEn : displayIndustriesZh;
+    const currentIndustriesData = lang === 'en' ? industriesEn : industriesZh;
 
     // Filter states
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -45,28 +47,12 @@ export default function Home() {
     const [selectedScenario, setSelectedScenario] = useState<any | null>(null);
     const [filterExpanded, setFilterExpanded] = useState<'topic' | 'industry' | null>(null);
 
-    // BISHENG 14 Core Industries - English labels
-    const displayIndustries = [
-        { id: 'government', industry: 'Government', icon: 'Government', positioning: 'Digital public services.' },
-        { id: 'trade', industry: 'Trade & Business Services', icon: 'Trade and Business Services', positioning: 'Automated commerce & trade.' },
-        { id: 'infrastructure', industry: 'Engineering & Infrastructure', icon: 'Engineering and Infrastructure', positioning: 'Smart asset management.' },
-        { id: 'transportation', industry: 'Transportation', icon: 'Transportation', positioning: 'Intelligent logistics & routing.' },
-        { id: 'aerospace', industry: 'Aerospace', icon: 'Aerospace', positioning: 'Advanced simulations & monitoring.' },
-        { id: 'realestate', industry: 'Real Estate & Property', icon: 'Real Estate and Property', positioning: 'Smart buildings & facility ops.' },
-        { id: 'education', industry: 'Education & Research', icon: 'Education and Research', positioning: 'Personalized learning.' },
-        { id: 'healthcare', industry: 'Healthcare', icon: 'Healthcare', positioning: 'AI-assisted diagnosis & care.' },
-        { id: 'manufacturing', industry: 'Automotive & Manufacturing', icon: 'Automotive and Manufacturing', positioning: 'Smart production & supply chain.' },
-        { id: 'retail', industry: 'Retail', icon: 'Retail', positioning: 'Personalized shopping experiences.' },
-        { id: 'it', industry: 'IT & Tech', icon: 'IT and Tech', positioning: 'Automated software & ops.' },
-        { id: 'energy', industry: 'Energy', icon: 'Energy', positioning: 'Grid optimization & ops.' },
-        { id: 'general', industry: 'General Enterprise', icon: 'General Enterprise', positioning: 'Horizontal workflows & productivity.' },
-        { id: 'finance', industry: 'Finance', icon: 'Finance', positioning: 'Intelligent risk management & analytics.' },
-    ];
+
 
     const total = displayIndustries.length;
 
     // Derived Scenarios List for the grid
-    const allScenarios = industriesData.flatMap(ind =>
+    const allScenarios = currentIndustriesData.flatMap(ind =>
         ind.scenarios.map(s => ({ ...s, industryId: ind.id, industryName: ind.industry }))
     );
 
@@ -93,17 +79,17 @@ export default function Home() {
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
                         </span>
-                        <span>BISHENG Agent Landscape</span>
+                        <span>{txt.title}</span>
                     </motion.div>
 
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.1 }}
-                        className="text-5xl md:text-6xl font-extrabold leading-tight tracking-tight"
+                        className="text-5xl md:text-6xl font-extrabold leading-normal md:leading-snug tracking-tight pb-2"
                     >
-                        AI Agents Across <br />
-                        <span className="text-gradient">14+ Industries</span>
+                        {txt.heroTitle1} <br />
+                        <span className="text-gradient">{txt.heroTitle2}</span>
                     </motion.h1>
 
                     <motion.p
@@ -112,7 +98,7 @@ export default function Home() {
                         transition={{ duration: 0.6, delay: 0.2 }}
                         className="text-lg text-slate-300 leading-relaxed max-w-lg"
                     >
-                        BISHENG empowers enterprises with intelligent, scalable AI Agent solutions across all core industries. Transform your workflows with state-of-the-art multi-agent orchestration.
+                        {txt.heroDesc}
                     </motion.p>
 
                     <motion.div
@@ -131,12 +117,12 @@ export default function Home() {
                             }}
                             className="btn-primary group"
                         >
-                            Explore Scenarios
+                            {txt.exploreBtn}
                             <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
                         </button>
 
                         <button className="btn-secondary" onClick={() => router.push('/landscape')}>
-                            View Landscape Map
+                            {txt.viewMapBtn}
                         </button>
                     </motion.div>
                 </div>
@@ -153,7 +139,7 @@ export default function Home() {
                         <div className="absolute w-[70%] h-[70%] rounded-full border border-indigo-500/20" />
                         <div className="absolute w-[40%] h-[40%] rounded-full border border-indigo-400/30 bg-indigo-500/5 shadow-[0_0_40px_rgba(79,70,229,0.2)] flex items-center justify-center flex-col z-0">
                             <span className="text-indigo-200 font-bold text-lg text-center">BISHENG<br />Agent</span>
-                            <span className="text-sm text-slate-400">Core Engine</span>
+                            <span className="text-sm text-slate-400">{txt.coreEngine.replace("BISHENG ", "")}</span>
                         </div>
 
                         {/* Radial Nodes */}
@@ -167,7 +153,7 @@ export default function Home() {
 
                             const isHovered = hoveredIndex === i;
                             // Only navigate if it's a real item from industriesData
-                            const isSelectable = industriesData.some(d => d.id === ind.id);
+                            const isSelectable = currentIndustriesData.some(d => d.id === ind.id);
 
                             return (
                                 <motion.div
@@ -216,7 +202,7 @@ export default function Home() {
                                                         {ind.positioning}
                                                     </p>
                                                     {!isSelectable && (
-                                                        <div className="text-[10px] text-indigo-400 mt-2 font-medium uppercase tracking-wider">COMING SOON</div>
+                                                        <div className="text-[10px] text-indigo-400 mt-2 font-medium uppercase tracking-wider">{txt.comingSoon}</div>
                                                     )}
                                                 </motion.div>
                                             )}
@@ -248,7 +234,7 @@ export default function Home() {
                                 onClick={() => setFilterExpanded(filterExpanded === 'topic' ? null : 'topic')}
                             >
                                 <span className="font-semibold text-slate-200 group-hover:text-white flex items-center">
-                                    <span className="text-xl mr-4 font-light w-4 text-center">{filterExpanded === 'topic' ? '−' : '+'}</span> Main Scenarios
+                                    <span className="text-xl mr-4 font-light w-4 text-center">{filterExpanded === 'topic' ? '−' : '+'}</span> {txt.filterMain}
                                 </span>
                             </div>
                             <div
@@ -256,7 +242,7 @@ export default function Home() {
                                 onClick={() => setFilterExpanded(filterExpanded === 'industry' ? null : 'industry')}
                             >
                                 <span className="font-semibold text-slate-200 group-hover:text-white flex items-center">
-                                    <span className="text-xl mr-4 font-light w-4 text-center">{filterExpanded === 'industry' ? '−' : '+'}</span> Industry
+                                    <span className="text-xl mr-4 font-light w-4 text-center">{filterExpanded === 'industry' ? '−' : '+'}</span> {txt.filterIndustry}
                                 </span>
                             </div>
                         </div>
@@ -305,13 +291,13 @@ export default function Home() {
                                                 onClick={() => { setSelectedCategory(null); setSelectedIndustry(null); }}
                                                 className="text-sm font-semibold hover:text-white text-slate-300 transition-colors"
                                             >
-                                                Clear all
+                                                {txt.clearAll}
                                             </button>
                                             <button
                                                 onClick={() => setFilterExpanded(null)}
                                                 className="px-8 py-3 bg-[#034FE5] hover:bg-[#023cae] text-white font-semibold transition-colors flex items-center"
                                             >
-                                                Show results
+                                                {txt.showResults}
                                             </button>
                                         </div>
                                     </div>
@@ -352,13 +338,13 @@ export default function Home() {
                 ) : (
                     <div className="glass-card p-12 text-center flex flex-col items-center justify-center">
                         <Search size={40} className="text-slate-500 mb-4" />
-                        <h3 className="text-xl font-bold text-white mb-2">No Scenarios Found</h3>
-                        <p className="text-slate-400">Try adjusting your filters to see more results.</p>
+                        <h3 className="text-xl font-bold text-white mb-2">{txt.noResults}</h3>
+                        <p className="text-slate-400">{txt.tryAdjusting}</p>
                         <button
                             onClick={() => { setSelectedCategory(null); setSelectedIndustry(null); }}
                             className="mt-6 text-sm text-accent hover:text-indigo-300 transition-colors"
                         >
-                            Clear all filters
+                            {txt.clearFilters}
                         </button>
                     </div>
                 )}

@@ -2,8 +2,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { industriesData } from '../../../data/industries';
+import { industriesEn, industriesZh } from '../../../data/industries';
 import type { Scenario } from '../../../data/industries';
+import { useLang } from '../../../components/Providers';
+import { t } from '../../../data/translations';
 import ScenarioModal from '../../../components/ScenarioModal';
 import {
     ArrowLeft, ChevronRight, BarChart3,
@@ -26,9 +28,12 @@ export default function IndustryDetail() {
     const params = useParams();
     const id = params?.id as string;
     const router = useRouter();
+    const { lang } = useLang();
     const [selectedScenario, setSelectedScenario] = useState<Scenario | null>(null);
+    const txt = t[lang];
 
-    const industry = industriesData.find(ind => ind.id === id);
+    const currentIndustriesData = lang === 'en' ? industriesEn : industriesZh;
+    const industry = currentIndustriesData.find(ind => ind.id === id);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -37,9 +42,9 @@ export default function IndustryDetail() {
     if (!industry) {
         return (
             <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-                <h2 className="text-3xl font-bold mb-4">Industry Not Found</h2>
+                <h2 className="text-3xl font-bold mb-4">{txt.notFound}</h2>
                 <button onClick={() => router.push('/')} className="btn-primary">
-                    Back to Landscape
+                    {txt.back}
                 </button>
             </div>
         );
@@ -55,7 +60,7 @@ export default function IndustryDetail() {
                     className="inline-flex items-center text-sm font-medium text-indigo-300 hover:text-white transition-colors mb-12 group"
                 >
                     <ArrowLeft size={16} className="mr-2 group-hover:-translate-x-1 transition-transform" />
-                    Back to Landscape Map
+                    {txt.back}
                 </button>
 
                 <motion.div
@@ -86,7 +91,7 @@ export default function IndustryDetail() {
                         transition={{ duration: 0.5, delay: 0.1 }}
                     >
                         <h2 className="text-sm font-bold text-indigo-400 uppercase tracking-widest mb-4 flex items-center">
-                            <span className="w-8 h-px bg-indigo-500 mr-4"></span> Agent Overview
+                            <span className="w-8 h-px bg-indigo-500 mr-4"></span> {txt.overview}
                         </h2>
                         <p className="text-lg leading-relaxed text-slate-300 mb-8">
                             {industry.overview}
@@ -100,7 +105,7 @@ export default function IndustryDetail() {
                         transition={{ duration: 0.5, delay: 0.2 }}
                     >
                         <h2 className="text-sm font-bold text-indigo-400 uppercase tracking-widest mb-6 flex items-center">
-                            <span className="w-8 h-px bg-indigo-500 mr-4"></span> Demand Analysis
+                            <span className="w-8 h-px bg-indigo-500 mr-4"></span> {txt.demand}
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {industry.demands.map((demand, idx) => (
@@ -121,7 +126,7 @@ export default function IndustryDetail() {
                         transition={{ duration: 0.5, delay: 0.4 }}
                     >
                         <h2 className="text-sm font-bold text-indigo-400 uppercase tracking-widest mb-6 flex items-center">
-                            <span className="w-8 h-px bg-indigo-500 mr-4"></span> Scenario Breakdown
+                            <span className="w-8 h-px bg-indigo-500 mr-4"></span> {txt.scenarioBreakdown}
                         </h2>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -148,7 +153,7 @@ export default function IndustryDetail() {
                                         </p>
                                     </div>
                                     <div className="px-6 py-4 border-t border-white/5 flex items-center justify-between mt-auto">
-                                        <span className="text-sm font-medium text-accent">View Details</span>
+                                        <span className="text-sm font-medium text-accent">{txt.viewDetails}</span>
                                         <ChevronRight size={16} className="text-accent" />
                                     </div>
                                 </div>
@@ -172,7 +177,7 @@ export default function IndustryDetail() {
                             <div className="absolute top-0 right-0 w-32 h-32 bg-accent/20 blur-3xl rounded-full" />
 
                             <h2 className="text-sm font-bold text-indigo-300 uppercase tracking-widest mb-6 relative z-10">
-                                Value Delivered
+                                {txt.value}
                             </h2>
 
                             <div className="space-y-6 relative z-10">
@@ -197,7 +202,7 @@ export default function IndustryDetail() {
                             className="p-6 rounded-3xl bg-surface/40 border border-white/5 backdrop-blur-md"
                         >
                             <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">
-                                Core Capabilities
+                                {txt.capabilities}
                             </h2>
 
                             <div className="grid grid-cols-2 gap-3">
